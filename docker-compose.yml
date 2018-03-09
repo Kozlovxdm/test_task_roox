@@ -1,0 +1,10 @@
+version: '2'
+services:
+  db:
+    image: postgres:latest
+    environment:
+      - POSTGRES_USER=dimon
+      - POSTGRES_PASSWORD=dimon
+      - POSTGRES_DB=dimon
+    ports:
+      - 5432:5432
