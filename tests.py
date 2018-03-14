@@ -5,6 +5,7 @@ import psycopg2
 
 class SimpleTest(unittest.TestCase):
 
+    #Заполнение таблицы тестируемыми данными
     def seed_test_data(self):
         try:
             conn = psycopg2.connect(dbname="dimon", user="dimon", password="dimon", host="localhost")
@@ -23,6 +24,7 @@ class SimpleTest(unittest.TestCase):
             if conn:
                 conn.close()
 
+    #Очистка всех строк таблицы 
     def delete_seed_data(self):
         try:
             conn = psycopg2.connect(dbname="dimon", user="dimon", password="dimon", host="localhost")
@@ -44,7 +46,8 @@ class SimpleTest(unittest.TestCase):
     def tearDown(self):
         self.delete_seed_data()
 
-    def test_sucsess_user1(self):
+    #Позитивные тесты на проверку значений по id
+    def test_success_get_user1(self):
         response = self.client.get('/user?id=1')
         self.assertEqual(200, response.status_code)
         response_data = response.data.decode('utf-8')
@@ -53,7 +56,7 @@ class SimpleTest(unittest.TestCase):
         self.assertEqual('Sergeevich', response_data.get('second_name'))
         self.assertEqual('Kozlov', response_data.get('surname'))
 
-    def test_sucsess_user3(self):
+    def test_success_get_user3(self):
         response = self.client.get('/user?id=3')
         self.assertEqual(200, response.status_code)
         response_data = response.data.decode('utf-8')
@@ -62,19 +65,22 @@ class SimpleTest(unittest.TestCase):
         self.assertEqual('Amadeus', response_data.get('second_name'))
         self.assertEqual('Mozart', response_data.get('surname'))
 
-    def test_sucsess_user5(self):
+    #Позитивный тест на проверку не заполненного поля в записи
+    def test_success_get_user5(self):
         response = self.client.get('/user?id=5')
         self.assertEqual(200, response.status_code)
         response_data = response.data.decode('utf-8')
         response_data = json.loads(response_data)
         self.assertEqual('Edvard', response_data.get('name'))
+        self.assertEqual(None, response_data.get('second_name'))
         self.assertEqual('Grieg', response_data.get('surname'))
 
-    def test_failed_user(self):
+    #Негативные тесты на пустой id и несуществующий id 
+    def test_failed_user_id(self):
         response = self.client.get('/user?id=')
         self.assertEqual(400, response.status_code)
 
-    def test_not_found(self):
+    def test_user_not_found(self):
         response = self.client.get('/user?id=6')
         self.assertEqual(404, response.status_code)
 

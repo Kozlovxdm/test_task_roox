@@ -4,11 +4,12 @@ import psycopg2
 from psycopg2.extras import DictCursor
 
 
-
+#Объявление парсера, принимающего аргумент id
 app = Flask(__name__)
 parser = reqparse.RequestParser()
 parser.add_argument('id', type=int)
 
+#Проверка на обязательный id, запрос в БД по id 
 @app.route("/user")
 def get_user():
     args = parser.parse_args()

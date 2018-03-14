@@ -1,7 +1,7 @@
 **Запуск Docker**
-sudo apt-get install docker.io
-docker compose up -d
+docker-compose up -d
 docker ps
+docker cp db.sql container_name:/
 docker exec -it container_name /bin/bash
 psql -h localhost -U dimon dimon < db.sql
 
